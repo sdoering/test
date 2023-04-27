@@ -1,0 +1,27 @@
+version: 2
+sources:
+  - name: jaffle_shop
+    database: raw
+    schema: jaffle_shop
+    tables:
+        - name: customers
+        - name: orders
+          loaded_at_field: _etl_loaded_at
+          freshness: 
+            warn_after:
+              count: 12
+              period: hour
+            error_after:
+              count: 24
+              period: hour
+          
+          description: >
+            One record per order. Includes cancelled and deleted orders.
+          columns:
+            - name: id
+              description: Primary key of the orders table. Should never be NULL and should always be unique.
+              tests:
+                - unique
+                - not_null
+            - name: status
+              description: Note that the status can change over time when an order is fullfilled, returned or cancelled
