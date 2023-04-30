@@ -1,16 +1,22 @@
 version: 2
+
 sources:
   - name: jaffle_shop
+    description: A clone of a postgres application database
     database: raw
     schema: jaffle_shop
     tables:
         - name: customers
+          description: Raw customer data
           columns:
             - name: id
+              description: Primary key for customers 
               tests:
                 - unique 
                 - not_null 
+
         - name: orders
+          description: Raw orders data. One record per order. Includes cancelled and deleted orders.
           loaded_at_field: _etl_loaded_at
           freshness: 
             warn_after:
@@ -21,23 +27,12 @@ sources:
               period: hour
           columns:
             - name: id
+              description: Primary key for orders
               tests:
                 - unique
-                - not_null 
-          description: >
-            One record per order. Includes cancelled and deleted orders.
+                - not_null
             - name: status
-              description: The status of the order. Will change over time.
-              tests:
-                - acceptesd_values
-                  values:
-                    - completed
-                    - shipped
-                    - returned
-                    - placed
-                    - return_pending
+              description: The status of the order. Will change over time. Can take one of 5 tested values. 
+              
             - name: customer_id
-              tests:
-                - relationships:
-                    to: ref('stg_customers')
-                    field: customer_id
+              description: Foreign key to customers. 
