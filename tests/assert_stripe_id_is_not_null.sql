@@ -6,4 +6,4 @@ select
 from 
     {{ source('stripe', 'payment') }}
 having 
-    not(null_counter > 0)
+    not(null_counter = 0)
