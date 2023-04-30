@@ -33,6 +33,5 @@ sources:
                 - not_null
             - name: status
               description: The status of the order. Will change over time. Can take one of 5 tested values. 
-              
             - name: customer_id
               description: Foreign key to customers. 
