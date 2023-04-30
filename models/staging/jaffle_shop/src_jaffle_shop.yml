@@ -5,6 +5,11 @@ sources:
     schema: jaffle_shop
     tables:
         - name: customers
+          columns:
+            - name: id
+              tests:
+                - unique 
+                - not_null 
         - name: orders
           loaded_at_field: _etl_loaded_at
           freshness: 
@@ -14,14 +19,25 @@ sources:
             error_after:
               count: 24
               period: hour
-          
-          description: >
-            One record per order. Includes cancelled and deleted orders.
           columns:
             - name: id
-              description: Primary key of the orders table. Should never be NULL and should always be unique.
               tests:
                 - unique
-                - not_null
+                - not_null 
+          description: >
+            One record per order. Includes cancelled and deleted orders.
             - name: status
-              description: Note that the status can change over time when an order is fullfilled, returned or cancelled
+              description: The status of the order. Will change over time.
+              tests:
+                - acceptesd_values
+                  values:
+                    - completed
+                    - shipped
+                    - returned
+                    - placed
+                    - return_pending
+            - name: customer_id
+              tests:
+                - relationships:
+                    to: ref('stg_customers')
+                    field: customer_id
